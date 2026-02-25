@@ -94,15 +94,6 @@ export function TimelineCard({
                   {item.description}
                 </p>
               )}
-              {item.startDate && (
-                <p className="text-xs text-muted-foreground mt-2">
-                  {new Date(item.startDate).toLocaleDateString(undefined, {
-                    weekday: "short",
-                    month: "short",
-                    day: "numeric",
-                  })}
-                </p>
-              )}
             </div>
             <div className="flex items-center gap-0.5 shrink-0 opacity-0 group-hover:opacity-100 transition-opacity">
               <Link href={`/timelines/${timelineId}/items/${item.id}`}>

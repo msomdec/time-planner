@@ -162,14 +162,39 @@ export function TimelineBoard({
             strategy={verticalListSortingStrategy}
           >
             <div>
-              {items.map((item, index) => (
-                <TimelineCard
-                  key={item.id}
-                  item={item}
-                  timelineId={timelineId}
-                  onDelete={setDeleteTarget}
-                />
-              ))}
+              {items.map((item, index) => {
+                const prevDate = index > 0 ? items[index - 1].startDate : undefined;
+                const currentDate = item.startDate;
+                const showDateHeader = currentDate !== prevDate;
+
+                return (
+                  <div key={item.id}>
+                    {showDateHeader && (
+                      <div className="flex items-center gap-3 mb-3 mt-2 first:mt-0">
+                        <div className="w-24 shrink-0" />
+                        <div className="flex-1 flex items-center gap-3">
+                          <h2 className="font-script text-base font-semibold text-foreground whitespace-nowrap">
+                            {currentDate
+                              ? new Date(currentDate).toLocaleDateString(undefined, {
+                                  weekday: "long",
+                                  month: "long",
+                                  day: "numeric",
+                                  year: "numeric",
+                                })
+                              : "Unscheduled"}
+                          </h2>
+                          <div className="h-px flex-1 bg-rose-200/60" />
+                        </div>
+                      </div>
+                    )}
+                    <TimelineCard
+                      item={item}
+                      timelineId={timelineId}
+                      onDelete={setDeleteTarget}
+                    />
+                  </div>
+                );
+              })}
             </div>
           </SortableContext>
         </DndContext>
