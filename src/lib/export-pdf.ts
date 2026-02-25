@@ -54,62 +54,95 @@ export function exportTimelinePdf({
   doc.line(20, yPos, pageWidth - 20, yPos);
   yPos += 8;
 
-  // -- Table --
+  // -- Items grouped by date --
   if (items.length === 0) {
     doc.setFont("helvetica", "italic");
     doc.setFontSize(11);
     doc.setTextColor(161, 161, 170);
     doc.text("No items in this timeline yet.", 20, yPos);
   } else {
-    const tableData = items.map((item, index) => {
-      const time = buildTimeString(item);
-      const date = item.startDate
-        ? new Date(item.startDate).toLocaleDateString(undefined, {
-            weekday: "short",
-            month: "short",
+    // Group items by date
+    const groups: { date: string | null; items: TimelineItem[] }[] = [];
+    for (const item of items) {
+      const date = item.startDate ?? null;
+      const last = groups[groups.length - 1];
+      if (last && last.date === date) {
+        last.items.push(item);
+      } else {
+        groups.push({ date, items: [item] });
+      }
+    }
+
+    let itemNum = 1;
+
+    for (const group of groups) {
+      // Date section header
+      const dateLabel = group.date
+        ? new Date(group.date).toLocaleDateString(undefined, {
+            weekday: "long",
+            month: "long",
             day: "numeric",
+            year: "numeric",
           })
-        : "";
+        : "Unscheduled";
 
-      return [String(index + 1), item.name, date, time, item.description || "—"];
-    });
+      doc.setFont("helvetica", "bold");
+      doc.setFontSize(12);
+      doc.setTextColor(190, 18, 60); // rose-700
+      doc.text(dateLabel, 20, yPos);
+      yPos += 2;
 
-    autoTable(doc, {
-      startY: yPos,
-      head: [["#", "Event", "Date", "Time", "Details"]],
-      body: tableData,
-      margin: { left: 20, right: 20 },
-      styles: {
-        fontSize: 9.5,
-        cellPadding: 5,
-        textColor: [24, 24, 27],
-        lineColor: [244, 63, 94],
-        lineWidth: 0,
-      },
-      headStyles: {
-        fillColor: [254, 242, 242], // rose-50
-        textColor: [190, 18, 60],   // rose-700
-        fontStyle: "bold",
-        fontSize: 9,
-      },
-      alternateRowStyles: {
-        fillColor: [255, 251, 252],
-      },
-      columnStyles: {
-        0: { cellWidth: 10, halign: "center", textColor: [190, 18, 60] },
-        1: { cellWidth: 40, fontStyle: "bold" },
-        2: { cellWidth: 30 },
-        3: { cellWidth: 32 },
-        4: { cellWidth: "auto" },
-      },
-      didParseCell: (data) => {
-        // Add a subtle bottom border to each row
-        if (data.section === "body") {
-          data.cell.styles.lineWidth = { bottom: 0.1 };
-          data.cell.styles.lineColor = [228, 228, 231];
-        }
-      },
-    });
+      // Date underline
+      doc.setDrawColor(252, 228, 236); // rose-200
+      doc.setLineWidth(0.3);
+      doc.line(20, yPos, pageWidth - 20, yPos);
+      yPos += 4;
+
+      // Table for this date group
+      const tableData = group.items.map((item) => {
+        const time = buildTimeString(item);
+        const num = String(itemNum++);
+        return [num, item.name, time, item.description || "—"];
+      });
+
+      autoTable(doc, {
+        startY: yPos,
+        head: [["#", "Event", "Time", "Details"]],
+        body: tableData,
+        margin: { left: 20, right: 20 },
+        styles: {
+          fontSize: 9.5,
+          cellPadding: 5,
+          textColor: [24, 24, 27],
+          lineColor: [244, 63, 94],
+          lineWidth: 0,
+        },
+        headStyles: {
+          fillColor: [254, 242, 242], // rose-50
+          textColor: [190, 18, 60],   // rose-700
+          fontStyle: "bold",
+          fontSize: 9,
+        },
+        alternateRowStyles: {
+          fillColor: [255, 251, 252],
+        },
+        columnStyles: {
+          0: { cellWidth: 10, halign: "center", textColor: [190, 18, 60] },
+          1: { cellWidth: 45, fontStyle: "bold" },
+          2: { cellWidth: 35 },
+          3: { cellWidth: "auto" },
+        },
+        didParseCell: (data) => {
+          if (data.section === "body") {
+            data.cell.styles.lineWidth = { bottom: 0.1 };
+            data.cell.styles.lineColor = [228, 228, 231];
+          }
+        },
+      });
+
+      // Get Y position after table for next group
+      yPos = (doc as any).lastAutoTable.finalY + 10;
+    }
   }
 
   // -- Footer on each page --
