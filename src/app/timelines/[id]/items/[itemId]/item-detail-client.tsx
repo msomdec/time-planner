@@ -5,10 +5,10 @@ import { useRouter } from "next/navigation";
 import { Pencil } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { ItemForm } from "@/components/timeline/item-form";
 import { DocumentList } from "@/components/documents/document-list";
+import { formatTime } from "@/lib/format-time";
 import type { TimelineItem } from "@/types";
 
 interface ItemDetailClientProps {
@@ -53,32 +53,22 @@ export function ItemDetailClient({
             </div>
             {item.startDate && (
               <div>
-                <p className="text-xs text-muted-foreground mb-1">Start Date</p>
+                <p className="text-xs text-muted-foreground mb-1">Date</p>
                 <p className="text-sm">
                   {new Date(item.startDate).toLocaleDateString()}
-                  {item.startTime && ` at ${item.startTime}`}
                 </p>
               </div>
             )}
-            {item.endDate && (
-              <div>
-                <p className="text-xs text-muted-foreground mb-1">End Date</p>
-                <p className="text-sm">
-                  {new Date(item.endDate).toLocaleDateString()}
-                  {item.endTime && ` at ${item.endTime}`}
-                </p>
-              </div>
-            )}
-            {!item.startDate && item.startTime && (
+            {item.startTime && (
               <div>
                 <p className="text-xs text-muted-foreground mb-1">Start Time</p>
-                <p className="text-sm">{item.startTime}</p>
+                <p className="text-sm">{formatTime(item.startTime)}</p>
               </div>
             )}
-            {!item.endDate && item.endTime && (
+            {item.endTime && (
               <div>
                 <p className="text-xs text-muted-foreground mb-1">End Time</p>
-                <p className="text-sm">{item.endTime}</p>
+                <p className="text-sm">{formatTime(item.endTime)}</p>
               </div>
             )}
             {item.description && (
@@ -116,7 +106,6 @@ export function ItemDetailClient({
               color: item.color ?? "#f43f5e",
               startDate: item.startDate,
               startTime: item.startTime,
-              endDate: item.endDate,
               endTime: item.endTime,
             }}
             onSuccess={() => {

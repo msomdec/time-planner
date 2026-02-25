@@ -4,8 +4,8 @@ import { useSortable } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
 import { GripVertical, Calendar, Clock, Trash2, Eye } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
 import type { TimelineItem } from "@/types";
+import { formatTime } from "@/lib/format-time";
 import Link from "next/link";
 
 interface TimelineCardProps {
@@ -34,6 +34,16 @@ export function TimelineCard({
     opacity: isDragging ? 0.5 : 1,
   };
 
+  function timeLabel() {
+    if (!item.startTime && !item.endTime) return null;
+    if (item.startTime && item.endTime)
+      return `${formatTime(item.startTime)} – ${formatTime(item.endTime)}`;
+    if (item.startTime) return formatTime(item.startTime);
+    return `ends ${formatTime(item.endTime!)}`;
+  }
+
+  const time = timeLabel();
+
   return (
     <div
       ref={setNodeRef}
@@ -59,26 +69,20 @@ export function TimelineCard({
             {item.description}
           </p>
         )}
-        {(item.startDate || item.endDate) && (
-          <div className="flex items-center gap-1 mt-2">
-            <Calendar className="w-3 h-3 text-muted-foreground" />
-            <span className="text-xs text-muted-foreground">
-              {item.startDate && new Date(item.startDate).toLocaleDateString()}
-              {item.startDate && item.endDate && " – "}
-              {item.endDate && new Date(item.endDate).toLocaleDateString()}
+        <div className="flex items-center gap-3 mt-2 flex-wrap">
+          {item.startDate && (
+            <span className="flex items-center gap-1 text-xs text-muted-foreground">
+              <Calendar className="w-3 h-3" />
+              {new Date(item.startDate).toLocaleDateString()}
             </span>
-          </div>
-        )}
-        {(item.startTime || item.endTime) && (
-          <div className="flex items-center gap-1 mt-1">
-            <Clock className="w-3 h-3 text-muted-foreground" />
-            <span className="text-xs text-muted-foreground">
-              {item.startTime ?? ""}
-              {item.startTime && item.endTime && " – "}
-              {item.endTime ?? ""}
+          )}
+          {time && (
+            <span className="flex items-center gap-1 text-xs text-muted-foreground">
+              <Clock className="w-3 h-3" />
+              {time}
             </span>
-          </div>
-        )}
+          )}
+        </div>
       </div>
       <div className="flex items-center gap-1 shrink-0 opacity-0 group-hover:opacity-100 transition-opacity">
         <Link href={`/timelines/${timelineId}/items/${item.id}`}>

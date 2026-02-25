@@ -62,7 +62,6 @@ export async function POST(request: NextRequest, { params }: Params) {
       position: nextPosition,
       startDate: parsed.data.startDate ?? null,
       startTime: parsed.data.startTime ?? null,
-      endDate: parsed.data.endDate ?? null,
       endTime: parsed.data.endTime ?? null,
     })
     .returning();

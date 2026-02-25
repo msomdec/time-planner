@@ -17,7 +17,6 @@ interface ItemFormProps {
     color: string;
     startDate: string | null;
     startTime: string | null;
-    endDate: string | null;
     endTime: string | null;
   };
   onSuccess: () => void;
@@ -35,7 +34,6 @@ export function ItemForm({
   const [color, setColor] = useState(initial?.color ?? "#f43f5e");
   const [startDate, setStartDate] = useState(initial?.startDate ?? "");
   const [startTime, setStartTime] = useState(initial?.startTime ?? "");
-  const [endDate, setEndDate] = useState(initial?.endDate ?? "");
   const [endTime, setEndTime] = useState(initial?.endTime ?? "");
   const [loading, setLoading] = useState(false);
 
@@ -59,7 +57,6 @@ export function ItemForm({
           color,
           startDate: startDate || null,
           startTime: startTime || null,
-          endDate: endDate || null,
           endTime: endTime || null,
         }),
       });
@@ -81,7 +78,7 @@ export function ItemForm({
         <Label htmlFor="item-name">Name</Label>
         <Input
           id="item-name"
-          placeholder="e.g., Welcome Dinner"
+          placeholder="e.g., Florals arrive"
           value={name}
           onChange={(e) => setName(e.target.value)}
           required
@@ -103,9 +100,9 @@ export function ItemForm({
         <Label>Color</Label>
         <ColorPicker value={color} onChange={setColor} />
       </div>
-      <div className="grid grid-cols-2 gap-3">
+      <div className="grid grid-cols-3 gap-3">
         <div className="space-y-2">
-          <Label htmlFor="start-date">Start Date</Label>
+          <Label htmlFor="start-date">Date</Label>
           <Input
             id="start-date"
             type="date"
@@ -125,16 +122,6 @@ export function ItemForm({
           />
         </div>
         <div className="space-y-2">
-          <Label htmlFor="end-date">End Date</Label>
-          <Input
-            id="end-date"
-            type="date"
-            value={endDate}
-            onChange={(e) => setEndDate(e.target.value)}
-            className="border-rose-200 focus-visible:ring-rose-400"
-          />
-        </div>
-        <div className="space-y-2">
           <Label htmlFor="end-time">End Time</Label>
           <Input
             id="end-time"
@@ -145,6 +132,9 @@ export function ItemForm({
           />
         </div>
       </div>
+      <p className="text-xs text-muted-foreground">
+        Leave end time empty for one-time events (e.g., vendor arrival).
+      </p>
       <div className="flex gap-3 pt-2">
         <Button
           type="submit"
