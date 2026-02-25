@@ -23,7 +23,9 @@ export const timelineItems = sqliteTable("timeline_items", {
   color: text("color").default("#f43f5e"),
   position: integer("position").notNull().default(0),
   startDate: text("start_date"),
+  startTime: text("start_time"),
   endDate: text("end_date"),
+  endTime: text("end_time"),
   createdAt: text("created_at")
     .notNull()
     .$defaultFn(() => new Date().toISOString()),

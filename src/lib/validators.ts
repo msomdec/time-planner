@@ -18,7 +18,9 @@ export const createTimelineItemSchema = z.object({
     .regex(/^#[0-9a-fA-F]{6}$/, "Must be a hex color")
     .optional(),
   startDate: z.string().optional(),
+  startTime: z.string().regex(/^\d{2}:\d{2}$/, "Must be HH:MM format").optional(),
   endDate: z.string().optional(),
+  endTime: z.string().regex(/^\d{2}:\d{2}$/, "Must be HH:MM format").optional(),
 });
 
 export const updateTimelineItemSchema = z.object({
@@ -29,7 +31,9 @@ export const updateTimelineItemSchema = z.object({
     .regex(/^#[0-9a-fA-F]{6}$/, "Must be a hex color")
     .optional(),
   startDate: z.string().nullable().optional(),
+  startTime: z.string().regex(/^\d{2}:\d{2}$/, "Must be HH:MM format").nullable().optional(),
   endDate: z.string().nullable().optional(),
+  endTime: z.string().regex(/^\d{2}:\d{2}$/, "Must be HH:MM format").nullable().optional(),
 });
 
 export const reorderItemsSchema = z.object({

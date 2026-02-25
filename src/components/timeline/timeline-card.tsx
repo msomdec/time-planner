@@ -2,7 +2,7 @@
 
 import { useSortable } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
-import { GripVertical, Calendar, Trash2, Eye } from "lucide-react";
+import { GripVertical, Calendar, Clock, Trash2, Eye } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import type { TimelineItem } from "@/types";
@@ -66,6 +66,16 @@ export function TimelineCard({
               {item.startDate && new Date(item.startDate).toLocaleDateString()}
               {item.startDate && item.endDate && " – "}
               {item.endDate && new Date(item.endDate).toLocaleDateString()}
+            </span>
+          </div>
+        )}
+        {(item.startTime || item.endTime) && (
+          <div className="flex items-center gap-1 mt-1">
+            <Clock className="w-3 h-3 text-muted-foreground" />
+            <span className="text-xs text-muted-foreground">
+              {item.startTime ?? ""}
+              {item.startTime && item.endTime && " – "}
+              {item.endTime ?? ""}
             </span>
           </div>
         )}

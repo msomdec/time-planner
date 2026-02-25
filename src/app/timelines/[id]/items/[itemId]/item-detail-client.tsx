@@ -56,6 +56,7 @@ export function ItemDetailClient({
                 <p className="text-xs text-muted-foreground mb-1">Start Date</p>
                 <p className="text-sm">
                   {new Date(item.startDate).toLocaleDateString()}
+                  {item.startTime && ` at ${item.startTime}`}
                 </p>
               </div>
             )}
@@ -64,7 +65,20 @@ export function ItemDetailClient({
                 <p className="text-xs text-muted-foreground mb-1">End Date</p>
                 <p className="text-sm">
                   {new Date(item.endDate).toLocaleDateString()}
+                  {item.endTime && ` at ${item.endTime}`}
                 </p>
+              </div>
+            )}
+            {!item.startDate && item.startTime && (
+              <div>
+                <p className="text-xs text-muted-foreground mb-1">Start Time</p>
+                <p className="text-sm">{item.startTime}</p>
+              </div>
+            )}
+            {!item.endDate && item.endTime && (
+              <div>
+                <p className="text-xs text-muted-foreground mb-1">End Time</p>
+                <p className="text-sm">{item.endTime}</p>
               </div>
             )}
             {item.description && (
@@ -101,7 +115,9 @@ export function ItemDetailClient({
               description: item.description ?? "",
               color: item.color ?? "#f43f5e",
               startDate: item.startDate,
+              startTime: item.startTime,
               endDate: item.endDate,
+              endTime: item.endTime,
             }}
             onSuccess={() => {
               setShowEditForm(false);

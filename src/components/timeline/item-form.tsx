@@ -16,7 +16,9 @@ interface ItemFormProps {
     description: string;
     color: string;
     startDate: string | null;
+    startTime: string | null;
     endDate: string | null;
+    endTime: string | null;
   };
   onSuccess: () => void;
   onCancel: () => void;
@@ -32,7 +34,9 @@ export function ItemForm({
   const [description, setDescription] = useState(initial?.description ?? "");
   const [color, setColor] = useState(initial?.color ?? "#f43f5e");
   const [startDate, setStartDate] = useState(initial?.startDate ?? "");
+  const [startTime, setStartTime] = useState(initial?.startTime ?? "");
   const [endDate, setEndDate] = useState(initial?.endDate ?? "");
+  const [endTime, setEndTime] = useState(initial?.endTime ?? "");
   const [loading, setLoading] = useState(false);
 
   const isEditing = !!initial;
@@ -54,7 +58,9 @@ export function ItemForm({
           description: description.trim(),
           color,
           startDate: startDate || null,
+          startTime: startTime || null,
           endDate: endDate || null,
+          endTime: endTime || null,
         }),
       });
 
@@ -109,12 +115,32 @@ export function ItemForm({
           />
         </div>
         <div className="space-y-2">
+          <Label htmlFor="start-time">Start Time</Label>
+          <Input
+            id="start-time"
+            type="time"
+            value={startTime}
+            onChange={(e) => setStartTime(e.target.value)}
+            className="border-rose-200 focus-visible:ring-rose-400"
+          />
+        </div>
+        <div className="space-y-2">
           <Label htmlFor="end-date">End Date</Label>
           <Input
             id="end-date"
             type="date"
             value={endDate}
             onChange={(e) => setEndDate(e.target.value)}
+            className="border-rose-200 focus-visible:ring-rose-400"
+          />
+        </div>
+        <div className="space-y-2">
+          <Label htmlFor="end-time">End Time</Label>
+          <Input
+            id="end-time"
+            type="time"
+            value={endTime}
+            onChange={(e) => setEndTime(e.target.value)}
             className="border-rose-200 focus-visible:ring-rose-400"
           />
         </div>
