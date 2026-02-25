@@ -20,7 +20,7 @@ import {
 import { Plus, Download } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
-import { TimelineCard } from "./timeline-card";
+import { TimelineCard, ReadOnlyTimelineCard } from "./timeline-card";
 import { ItemForm } from "./item-form";
 import { ConfirmDialog } from "@/components/shared/confirm-dialog";
 import { EmptyState } from "@/components/shared/empty-state";
@@ -32,6 +32,28 @@ interface TimelineBoardProps {
   timelineName: string;
   timelineDescription?: string;
   initialItems: TimelineItem[];
+  readOnly?: boolean;
+}
+
+function DateHeader({ date }: { date: string | null }) {
+  return (
+    <div className="flex items-center gap-3 mb-3 mt-2 first:mt-0">
+      <div className="w-24 shrink-0" />
+      <div className="flex-1 flex items-center gap-3">
+        <h2 className="font-script text-base font-semibold text-foreground whitespace-nowrap">
+          {date
+            ? new Date(date).toLocaleDateString(undefined, {
+                weekday: "long",
+                month: "long",
+                day: "numeric",
+                year: "numeric",
+              })
+            : "Unscheduled"}
+        </h2>
+        <div className="h-px flex-1 bg-rose-200/60" />
+      </div>
+    </div>
+  );
 }
 
 export function TimelineBoard({
@@ -39,6 +61,7 @@ export function TimelineBoard({
   timelineName,
   timelineDescription,
   initialItems,
+  readOnly = false,
 }: TimelineBoardProps) {
   const router = useRouter();
   const [items, setItems] = useState(initialItems);
@@ -107,6 +130,67 @@ export function TimelineBoard({
       .then(setItems);
   }
 
+  function handleExportPdf() {
+    import("@/lib/export-pdf").then(({ exportTimelinePdf }) => {
+      exportTimelinePdf({
+        timelineName,
+        timelineDescription,
+        items,
+      });
+    });
+  }
+
+  function renderItemList(itemList: TimelineItem[]) {
+    return itemList.map((item, index) => {
+      const prevDate = index > 0 ? itemList[index - 1].startDate : undefined;
+      const currentDate = item.startDate;
+      const showDateHeader = currentDate !== prevDate;
+
+      return (
+        <div key={item.id}>
+          {showDateHeader && <DateHeader date={currentDate ?? null} />}
+          {readOnly ? (
+            <ReadOnlyTimelineCard item={item} />
+          ) : (
+            <TimelineCard
+              item={item}
+              timelineId={timelineId}
+              onDelete={setDeleteTarget}
+            />
+          )}
+        </div>
+      );
+    });
+  }
+
+  if (readOnly) {
+    return (
+      <>
+        {items.length > 0 && (
+          <div className="flex justify-end gap-2 mb-4">
+            <Button
+              variant="outline"
+              className="rounded-full px-5 border-rose-200 text-rose-600 hover:bg-rose-50"
+              onClick={handleExportPdf}
+            >
+              <Download className="w-4 h-4 mr-2" />
+              Export PDF
+            </Button>
+          </div>
+        )}
+
+        {items.length === 0 ? (
+          <EmptyState
+            title="No items yet"
+            description="This timeline has no events"
+          />
+        ) : (
+          <div>{renderItemList(items)}</div>
+        )}
+      </>
+    );
+  }
+
   return (
     <>
       <div className="flex justify-end gap-2 mb-4">
@@ -114,15 +198,7 @@ export function TimelineBoard({
           <Button
             variant="outline"
             className="rounded-full px-5 border-rose-200 text-rose-600 hover:bg-rose-50"
-            onClick={() => {
-              import("@/lib/export-pdf").then(({ exportTimelinePdf }) => {
-                exportTimelinePdf({
-                  timelineName,
-                  timelineDescription,
-                  items,
-                });
-              });
-            }}
+            onClick={handleExportPdf}
           >
             <Download className="w-4 h-4 mr-2" />
             Export PDF
@@ -161,41 +237,7 @@ export function TimelineBoard({
             items={items.map((i) => i.id)}
             strategy={verticalListSortingStrategy}
           >
-            <div>
-              {items.map((item, index) => {
-                const prevDate = index > 0 ? items[index - 1].startDate : undefined;
-                const currentDate = item.startDate;
-                const showDateHeader = currentDate !== prevDate;
-
-                return (
-                  <div key={item.id}>
-                    {showDateHeader && (
-                      <div className="flex items-center gap-3 mb-3 mt-2 first:mt-0">
-                        <div className="w-24 shrink-0" />
-                        <div className="flex-1 flex items-center gap-3">
-                          <h2 className="font-script text-base font-semibold text-foreground whitespace-nowrap">
-                            {currentDate
-                              ? new Date(currentDate).toLocaleDateString(undefined, {
-                                  weekday: "long",
-                                  month: "long",
-                                  day: "numeric",
-                                  year: "numeric",
-                                })
-                              : "Unscheduled"}
-                          </h2>
-                          <div className="h-px flex-1 bg-rose-200/60" />
-                        </div>
-                      </div>
-                    )}
-                    <TimelineCard
-                      item={item}
-                      timelineId={timelineId}
-                      onDelete={setDeleteTarget}
-                    />
-                  </div>
-                );
-              })}
-            </div>
+            <div>{renderItemList(items)}</div>
           </SortableContext>
         </DndContext>
       )}

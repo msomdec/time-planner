@@ -8,6 +8,7 @@ import { Button } from "@/components/ui/button";
 import { PageHeader } from "@/components/shared/page-header";
 import { TimelineBoard } from "@/components/timeline/timeline-board";
 import { DeleteTimelineButton } from "./delete-timeline-button";
+import { ShareButton } from "@/components/timeline/share-button";
 
 export const dynamic = "force-dynamic";
 
@@ -44,10 +45,13 @@ export default async function TimelinePage({
         title={timeline.name}
         description={timeline.description || undefined}
         action={
-          <DeleteTimelineButton
-            timelineId={timeline.id}
-            timelineName={timeline.name}
-          />
+          <div className="flex items-center gap-2">
+            <ShareButton timelineId={timeline.id} />
+            <DeleteTimelineButton
+              timelineId={timeline.id}
+              timelineName={timeline.name}
+            />
+          </div>
         }
       />
 
