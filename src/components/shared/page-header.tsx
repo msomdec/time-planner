@@ -8,12 +8,14 @@ interface PageHeaderProps {
 
 export function PageHeader({ title, description, action }: PageHeaderProps) {
   return (
-    <div className="gradient-header rounded-2xl p-6 sm:p-8 mb-8 text-white">
+    <div className="mb-8">
       <div className="flex items-start justify-between gap-4">
         <div>
-          <h1 className="font-script text-3xl sm:text-4xl mb-1">{title}</h1>
+          <h1 className="font-script text-2xl sm:text-3xl font-bold tracking-tight text-foreground">
+            {title}
+          </h1>
           {description && (
-            <p className="text-white/80 text-sm sm:text-base">{description}</p>
+            <p className="text-muted-foreground text-sm mt-1">{description}</p>
           )}
         </div>
         {action && <div className="shrink-0">{action}</div>}

@@ -43,7 +43,7 @@ export function DeleteTimelineButton({
       <Button
         variant="ghost"
         size="icon"
-        className="text-white/70 hover:text-white hover:bg-white/20"
+        className="text-muted-foreground hover:text-destructive"
         onClick={() => setOpen(true)}
       >
         <Trash2 className="w-4 h-4" />

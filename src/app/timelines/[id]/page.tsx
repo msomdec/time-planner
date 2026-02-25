@@ -1,6 +1,6 @@
 import { notFound } from "next/navigation";
 import Link from "next/link";
-import { ArrowLeft, Pencil, Trash2 } from "lucide-react";
+import { ArrowLeft } from "lucide-react";
 import { db } from "@/db";
 import { timelines } from "@/db/schema";
 import { eq } from "drizzle-orm";
@@ -31,11 +31,11 @@ export default async function TimelinePage({
 
   return (
     <>
-      <div className="mb-4">
+      <div className="mb-6">
         <Link href="/">
-          <Button variant="ghost" size="sm" className="text-muted-foreground hover:text-rose-600">
+          <Button variant="ghost" size="sm" className="text-muted-foreground hover:text-foreground -ml-2">
             <ArrowLeft className="w-4 h-4 mr-1" />
-            Back to Timelines
+            All Timelines
           </Button>
         </Link>
       </div>
@@ -44,12 +44,10 @@ export default async function TimelinePage({
         title={timeline.name}
         description={timeline.description || undefined}
         action={
-          <div className="flex gap-2">
-            <DeleteTimelineButton
-              timelineId={timeline.id}
-              timelineName={timeline.name}
-            />
-          </div>
+          <DeleteTimelineButton
+            timelineId={timeline.id}
+            timelineName={timeline.name}
+          />
         }
       />
 

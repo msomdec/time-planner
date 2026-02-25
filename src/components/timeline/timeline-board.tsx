@@ -108,7 +108,7 @@ export function TimelineBoard({
       <div className="flex justify-end mb-4">
         <Button
           onClick={() => setShowAddForm(true)}
-          className="bg-rose-500 hover:bg-rose-600 text-white"
+          className="bg-rose-500 hover:bg-rose-600 text-white rounded-full px-5"
         >
           <Plus className="w-4 h-4 mr-2" />
           Add Item
@@ -122,7 +122,7 @@ export function TimelineBoard({
           action={
             <Button
               onClick={() => setShowAddForm(true)}
-              className="bg-rose-500 hover:bg-rose-600 text-white"
+              className="bg-rose-500 hover:bg-rose-600 text-white rounded-full px-5"
             >
               <Plus className="w-4 h-4 mr-2" />
               Add First Item
@@ -139,8 +139,8 @@ export function TimelineBoard({
             items={items.map((i) => i.id)}
             strategy={verticalListSortingStrategy}
           >
-            <div className="space-y-3">
-              {items.map((item) => (
+            <div>
+              {items.map((item, index) => (
                 <TimelineCard
                   key={item.id}
                   item={item}
