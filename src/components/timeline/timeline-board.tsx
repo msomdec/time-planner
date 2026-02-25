@@ -17,7 +17,7 @@ import {
   verticalListSortingStrategy,
   arrayMove,
 } from "@dnd-kit/sortable";
-import { Plus } from "lucide-react";
+import { Plus, Download } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { TimelineCard } from "./timeline-card";
@@ -29,11 +29,15 @@ import { toast } from "sonner";
 
 interface TimelineBoardProps {
   timelineId: number;
+  timelineName: string;
+  timelineDescription?: string;
   initialItems: TimelineItem[];
 }
 
 export function TimelineBoard({
   timelineId,
+  timelineName,
+  timelineDescription,
   initialItems,
 }: TimelineBoardProps) {
   const router = useRouter();
@@ -105,7 +109,25 @@ export function TimelineBoard({
 
   return (
     <>
-      <div className="flex justify-end mb-4">
+      <div className="flex justify-end gap-2 mb-4">
+        {items.length > 0 && (
+          <Button
+            variant="outline"
+            className="rounded-full px-5 border-rose-200 text-rose-600 hover:bg-rose-50"
+            onClick={() => {
+              import("@/lib/export-pdf").then(({ exportTimelinePdf }) => {
+                exportTimelinePdf({
+                  timelineName,
+                  timelineDescription,
+                  items,
+                });
+              });
+            }}
+          >
+            <Download className="w-4 h-4 mr-2" />
+            Export PDF
+          </Button>
+        )}
         <Button
           onClick={() => setShowAddForm(true)}
           className="bg-rose-500 hover:bg-rose-600 text-white rounded-full px-5"

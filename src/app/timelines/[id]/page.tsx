@@ -53,6 +53,8 @@ export default async function TimelinePage({
 
       <TimelineBoard
         timelineId={timeline.id}
+        timelineName={timeline.name}
+        timelineDescription={timeline.description || undefined}
         initialItems={timeline.items}
       />
     </>
