@@ -1,14 +1,11 @@
 import type { InferSelectModel, InferInsertModel } from "drizzle-orm";
-import type { timelines, timelineItems, documents, shareTokens } from "@/db/schema";
+import type { timelines, timelineItems, documents } from "@/db/schema";
 
 export type Timeline = InferSelectModel<typeof timelines>;
 export type NewTimeline = InferInsertModel<typeof timelines>;
 
 export type TimelineItem = InferSelectModel<typeof timelineItems>;
 export type NewTimelineItem = InferInsertModel<typeof timelineItems>;
-
-export type ShareToken = InferSelectModel<typeof shareTokens>;
-export type NewShareToken = InferInsertModel<typeof shareTokens>;
 
 export type Document = InferSelectModel<typeof documents>;
 export type NewDocument = InferInsertModel<typeof documents>;

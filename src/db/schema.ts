@@ -33,17 +33,6 @@ export const timelineItems = sqliteTable("timeline_items", {
     .$defaultFn(() => new Date().toISOString()),
 });
 
-export const shareTokens = sqliteTable("share_tokens", {
-  id: integer("id").primaryKey({ autoIncrement: true }),
-  timelineId: integer("timeline_id")
-    .notNull()
-    .references(() => timelines.id, { onDelete: "cascade" }),
-  token: text("token").notNull().unique(),
-  createdAt: text("created_at")
-    .notNull()
-    .$defaultFn(() => new Date().toISOString()),
-});
-
 export const documents = sqliteTable("documents", {
   id: integer("id").primaryKey({ autoIncrement: true }),
   timelineItemId: integer("timeline_item_id").references(
@@ -62,7 +51,6 @@ export const documents = sqliteTable("documents", {
 // Relations
 export const timelinesRelations = relations(timelines, ({ many }) => ({
   items: many(timelineItems),
-  shareTokens: many(shareTokens),
 }));
 
 export const timelineItemsRelations = relations(
@@ -75,13 +63,6 @@ export const timelineItemsRelations = relations(
     documents: many(documents),
   })
 );
-
-export const shareTokensRelations = relations(shareTokens, ({ one }) => ({
-  timeline: one(timelines, {
-    fields: [shareTokens.timelineId],
-    references: [timelines.id],
-  }),
-}));
 
 export const documentsRelations = relations(documents, ({ one }) => ({
   timelineItem: one(timelineItems, {
