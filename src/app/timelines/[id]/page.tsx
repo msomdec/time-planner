@@ -22,7 +22,11 @@ export default async function TimelinePage({
     where: eq(timelines.id, Number(id)),
     with: {
       items: {
-        orderBy: (items, { asc }) => [asc(items.position)],
+        orderBy: (items, { asc, sql }) => [
+          sql`${items.startDate} is null`,
+          asc(items.startDate),
+          asc(items.position),
+        ],
       },
     },
   });

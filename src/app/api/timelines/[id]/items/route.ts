@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { db } from "@/db";
 import { timelineItems, timelines } from "@/db/schema";
 import { createTimelineItemSchema } from "@/lib/validators";
-import { eq, asc } from "drizzle-orm";
+import { eq, asc, sql } from "drizzle-orm";
 
 type Params = { params: Promise<{ id: string }> };
 
@@ -12,7 +12,11 @@ export async function GET(_request: NextRequest, { params }: Params) {
     .select()
     .from(timelineItems)
     .where(eq(timelineItems.timelineId, Number(id)))
-    .orderBy(asc(timelineItems.position));
+    .orderBy(
+      sql`${timelineItems.startDate} is null`,
+      asc(timelineItems.startDate),
+      asc(timelineItems.position),
+    );
 
   return NextResponse.json(items);
 }

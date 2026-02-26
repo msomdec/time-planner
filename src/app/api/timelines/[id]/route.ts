@@ -10,7 +10,15 @@ export async function GET(_request: NextRequest, { params }: Params) {
   const { id } = await params;
   const timeline = await db.query.timelines.findFirst({
     where: eq(timelines.id, Number(id)),
-    with: { items: { orderBy: (items, { asc }) => [asc(items.position)] } },
+    with: {
+      items: {
+        orderBy: (items, { asc, sql }) => [
+          sql`${items.startDate} is null`,
+          asc(items.startDate),
+          asc(items.position),
+        ],
+      },
+    },
   });
 
   if (!timeline) {
