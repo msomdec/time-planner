@@ -175,7 +175,7 @@ export function TimelineBoard({
                         <div className="flex-1 flex items-center gap-3">
                           <h2 className="font-script text-base font-semibold text-foreground whitespace-nowrap">
                             {currentDate
-                              ? new Date(currentDate).toLocaleDateString(undefined, {
+                              ? new Date(currentDate + "T00:00:00").toLocaleDateString(undefined, {
                                   weekday: "long",
                                   month: "long",
                                   day: "numeric",

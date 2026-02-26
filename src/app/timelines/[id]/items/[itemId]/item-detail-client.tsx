@@ -55,7 +55,7 @@ export function ItemDetailClient({
               <div>
                 <p className="text-xs text-muted-foreground mb-1">Date</p>
                 <p className="text-sm">
-                  {new Date(item.startDate).toLocaleDateString()}
+                  {new Date(item.startDate + "T00:00:00").toLocaleDateString()}
                 </p>
               </div>
             )}
