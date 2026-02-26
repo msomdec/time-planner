@@ -34,7 +34,6 @@ export function TimelineCard({
     opacity: isDragging ? 0.4 : 1,
   };
 
-  const hasTime = item.startTime || item.endTime;
   const isRange = item.startTime && item.endTime;
 
   return (
@@ -79,16 +78,9 @@ export function TimelineCard({
               <GripVertical className="w-4 h-4" />
             </button>
             <div className="flex-1 min-w-0">
-              <div className="flex items-center gap-2">
-                <h3 className="font-medium text-sm text-foreground truncate">
-                  {item.name}
-                </h3>
-                {!isRange && hasTime && (
-                  <span className="shrink-0 inline-flex items-center px-1.5 py-0.5 rounded-md bg-rose-50 text-[10px] font-medium text-rose-600">
-                    One-time
-                  </span>
-                )}
-              </div>
+              <h3 className="font-medium text-sm text-foreground truncate">
+                {item.name}
+              </h3>
               {item.description && (
                 <p className="text-xs text-muted-foreground mt-1 line-clamp-2 leading-relaxed">
                   {item.description}

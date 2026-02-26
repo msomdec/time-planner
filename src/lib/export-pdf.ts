@@ -56,7 +56,6 @@ function drawTimelineItem(
   isLastInGroup: boolean,
   cardHeight: number
 ) {
-  const hasTime = item.startTime || item.endTime;
   const isRange = item.startTime && item.endTime;
 
   // -- Time column (right-aligned) --
@@ -111,11 +110,7 @@ function drawTimelineItem(
   doc.setFontSize(9.5);
   doc.setTextColor(24, 24, 27);
 
-  let nameMaxW = CARD_W - CARD_PADDING * 2;
-  const showBadge = hasTime && !isRange;
-  if (showBadge) {
-    nameMaxW -= 20; // reserve space for badge
-  }
+  const nameMaxW = CARD_W - CARD_PADDING * 2;
 
   let displayName = item.name;
   if (doc.getTextWidth(displayName) > nameMaxW) {
@@ -126,25 +121,6 @@ function drawTimelineItem(
   }
   const nameY = y + CARD_PADDING + 3.5;
   doc.text(displayName, CARD_X + CARD_PADDING, nameY);
-
-  // -- One-time badge --
-  if (showBadge) {
-    const badgeText = "One-time";
-    doc.setFontSize(6.5);
-    doc.setFont("helvetica", "bold");
-    const badgeW = doc.getTextWidth(badgeText) + 4;
-    const badgeX = CARD_X + CARD_PADDING + doc.getTextWidth(displayName) + 3;
-    // Only draw if it fits
-    if (badgeX + badgeW < CARD_X + CARD_W - CARD_PADDING) {
-      doc.setFontSize(9.5); // reset to measure name width correctly
-      doc.setFontSize(6.5);
-      const badgeY = nameY - 3;
-      doc.setFillColor(255, 241, 242); // rose-50
-      doc.roundedRect(badgeX, badgeY, badgeW, 4.5, 1, 1, "F");
-      doc.setTextColor(225, 29, 72); // rose-600
-      doc.text(badgeText, badgeX + 2, badgeY + 3.2);
-    }
-  }
 
   // -- Description --
   if (item.description) {
